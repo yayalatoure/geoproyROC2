@@ -19,16 +19,16 @@ void genroc::logcsvOpen(){
     ofStreamGenroc << "Video" << "," << "InitFrame" << "," << "FinalFrame" << "," << "TestType" << "," << "Seed" << ",";
     ofStreamGenroc << "#Plays" << "," << "VarTreshold" << "," << "TotalErrors" << ",";
 
-    ofStreamGenroc <<"P1"<<","<<"E1.1"<<","<<"E2.1"<<","<<"C1"<<",";
-    ofStreamGenroc <<"P2"<<","<<"E1.2"<<","<<"E2.2"<<","<<"C2"<<",";
-    ofStreamGenroc <<"P3"<<","<<"E1.3"<<","<<"E2.3"<<","<<"C3"<<",";
-    ofStreamGenroc <<"P4"<<","<<"E1.4"<<","<<"E2.4"<<","<<"C4"<<",";
-    ofStreamGenroc <<"P5"<<","<<"E1.5"<<","<<"E2.5"<<","<<"C5"<<",";
-    ofStreamGenroc <<"P6"<<","<<"E1.6"<<","<<"E2.6"<<","<<"C6"<<",";
-    ofStreamGenroc <<"P7"<<","<<"E1.7"<<","<<"E2.7"<<","<<"C7"<<",";
-    ofStreamGenroc <<"P8"<<","<<"E1.8"<<","<<"E2.8"<<","<<"C8"<<",";
-    ofStreamGenroc <<"P9"<<","<<"E1.9"<<","<<"E2.9"<<","<<"C9"<<",";
-    ofStreamGenroc <<"P10"<<","<<"E1.10"<<","<<"E2.10"<<","<<"C10" << "\n";
+    ofStreamGenroc <<"Frame1"<<","<<"Target1"<<","<<"Frame2"<<","<<"Target2"<<",";
+    ofStreamGenroc <<"Frame3"<<","<<"Target3"<<","<<"Frame4"<<","<<"Target4"<<",";
+    ofStreamGenroc <<"Frame5"<<","<<"Target5"<<","<<"Frame6"<<","<<"Target6"<<",";
+    ofStreamGenroc <<"Frame7"<<","<<"Target7"<<","<<"Frame8"<<","<<"Target8"<<",";
+    ofStreamGenroc <<"Frame9"<<","<<"Target9"<<","<<"Frame10"<<","<<"Target10"<<",";
+    ofStreamGenroc <<"Frame11"<<","<<"Target11"<<","<<"Frame12"<<","<<"Target12"<<",";
+    ofStreamGenroc <<"Frame13"<<","<<"Target13"<<","<<"Frame14"<<","<<"Target14"<<",";
+    ofStreamGenroc <<"Frame15"<<","<<"Target15"<<","<<"Frame16"<<","<<"Target16"<<",";
+    ofStreamGenroc <<"Frame17"<<","<<"Target17"<<","<<"Frame18"<<","<<"Target18"<<",";
+    ofStreamGenroc <<"Frame19"<<","<<"Target19"<<","<<"Frame20"<<","<<"Target20"<<"," << "\n";
 
 }
 
@@ -78,6 +78,7 @@ void genroc::calibVideoSelector(){
 }
 
 void genroc::getVideo() {
+
     count_test = 0;
     count_cal  = 0;
     pathVideos = "/home/lalo/Desktop/Data/Videos/Video";
@@ -91,6 +92,7 @@ void genroc::getVideo() {
 
     cout << "\n" << "Path Video: " << endl;
     cout << path_test << endl;
+
 //    cout << "Path Video Calibracion" << endl;
 //    cout << path_cal << endl;
 //    cout << "Path Archivo Calibracion" << endl;
@@ -105,7 +107,7 @@ void genroc::getVideo() {
 
 void genroc::firstLog(){
 
-    ofStreamGenroc <<to_string(numVideo)<<","<<"Init"<<","<<"Final"<<","<<"Cognitive"<<","<<seed<<","<<"10"<<",";
+    ofStreamGenroc <<to_string(numVideo)<<","<<"Init"<<","<<"Final"<<","<<"Cognitive"<<","<<to_string(seed)<<","<<"10"<<",";
     ofStreamGenroc <<to_string(varThreshold)<<","<<"None"<<",";
 
 }
@@ -144,7 +146,7 @@ void genroc::algorithm(){
 
     stopLoopFlag = false;
 
-    while(!stopLoopFlag){   //(ch != 'q' && ch != 'Q' && !stopLoopFlag) {  //
+    while(ch != 'q' && ch != 'Q' && !stopLoopFlag) {  //
 
 
         //// Transfer Frame Structure ////
@@ -208,11 +210,7 @@ void genroc::algorithm(){
             Foot.kalmanResetStep(Foot.Left);
 
             Foot.askObjetives(geoproyTest);
-
-            if (!Foot.stop){
-                //// Matching Objetives State Machine////
-                Foot.stateMachine(geoproyTest);
-            }
+            Foot.centerOutCountFlag(geoproyTest);
 
             Foot.frameAct.processFrame.copyTo(Foot.frameAct.resultFrame);
             Foot.drawingResults();
@@ -229,14 +227,14 @@ void genroc::algorithm(){
             }
         }
 
-//        //// SHOW IMAGES ////
+        //// SHOW IMAGES ////
 //        if (Foot.frameAct.processFrame.data && Foot.start) {
 //            imshow("geoProy", geopro);
 //            imshow("Segment", Foot.frameAct.segmentedFrame);
 //            //imshow("Result", Foot.frameAct.processFrame);
 //            ch = char(cv::waitKey(0));
 //        }
-//
+
 //        else if(Foot.frameAct.processFrame.data){
 //            imshow("Segment", Foot.frameAct.segmentedFrame);
 //            ch = char(cv::waitKey(0));
@@ -245,6 +243,7 @@ void genroc::algorithm(){
         count_cal++;
         count_test++;
     }
-    ch = 0;
+
+    Foot.logEndVideo();
 
 }
