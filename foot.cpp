@@ -779,20 +779,19 @@ void foot::askObjetives(geoproy GeoProy){
         centerFlagIsIn = stepPointL.x > -60 && stepPointL.x < 60 && stepPointL.y > -60 && stepPointL.y < 60;
     }
 
-    if(!step_R && !step_L){
-
-        stepPointR = geoproy::transformFloor2Image(centerKalman_R, GeoProy.homographyInv);
-        stepPointL = geoproy::transformFloor2Image(centerKalman_L, GeoProy.homographyInv);
-        centerFlagIsIn = stepPointR.x > -50 && stepPointR.x < 50 && stepPointR.y > -50 && stepPointR.y < 50 &&
-                         stepPointL.x > -50 && stepPointL.x < 50 && stepPointL.y > -50 && stepPointL.y < 50;
-    }
+//    if(!step_R && !step_L){
+//
+//        stepPointR = geoproy::transformFloor2Image(centerKalman_R, GeoProy.homographyInv);
+//        stepPointL = geoproy::transformFloor2Image(centerKalman_L, GeoProy.homographyInv);
+//        centerFlagIsIn = stepPointR.x > -50 && stepPointR.x < 50 && stepPointR.y > -50 && stepPointR.y < 50 &&
+//                         stepPointL.x > -50 && stepPointL.x < 50 && stepPointL.y > -50 && stepPointL.y < 50;
+//    }
 
     if (centerFlagIsIn && centerFlagWasOut){
         centerFlagWasOut = false;
         countCenterOut = 0;
         objetiveAnt = 5;
         logMatchingEvent(5);
-
     }
 
 }

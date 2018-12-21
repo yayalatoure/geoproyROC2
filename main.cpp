@@ -33,7 +33,7 @@ int main(int argc, char *argv[]){
     genroc genROC(true);
 
     for (int j = 0; j < 1; ++j) {
-        genROC.varThreshold = 80 + j*5;
+        genROC.varThreshold = 210 + j*5;
         cout << "\n" << "VarThreshold: " << endl;
         cout << genROC.varThreshold << endl;
         genROC.logcsvOpen();
