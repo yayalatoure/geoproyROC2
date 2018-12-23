@@ -717,6 +717,7 @@ void foot::askObjetives(geoproy GeoProy){
 
     int totalObjetives = 9;
     double objetiveThreshold = 35;
+    double objetiveThresholdCenter = 55;
     double resultDistance;
 
     cv::Point stepPointR, stepPointL;
@@ -736,6 +737,37 @@ void foot::askObjetives(geoproy GeoProy){
                         foundMatchR = true;
                         objetiveAnt = objetive;
                         logMatchingEvent(objetive);
+
+                        ofstream &fileout = *ofStream;
+                        std::string::size_type sz;   // alias of size_t
+                        int i_dec = std::stoi (frame.substr(0,5),&sz) - limit;
+
+                        //cout << "frame target: " << i_dec << endl;
+                    }
+                    break;
+                }else{
+                    foundMatchR = false;
+                }
+            }else{ //// CENTER ////
+                resultDistance = distance(stepPointR, GeoProy.calibPointsFloor[5]);
+                if (resultDistance < objetiveThresholdCenter){
+                    objetive = 5;
+                    //if ((objetive != objetiveAnt) && countCenterOut){
+                    if (centerFlagWasOut){
+                        foundMatchR = true;
+                        objetiveAnt = objetive;
+                        logMatchingEvent(objetive);
+
+                        centerFlagWasOut = false;
+
+                        ofstream &fileout = *ofStream;
+                        std::string::size_type sz;   // alias of size_t
+                        int i_dec = std::stoi (frame.substr(0,5),&sz) - limit;
+
+                        //cout << "frame center: " << i_dec << endl;
+                        //cout << "countCenter: " << countCenterOut << endl;
+
+                        countCenterOut = 0;
                     }
                     break;
                 }else{
@@ -758,10 +790,41 @@ void foot::askObjetives(geoproy GeoProy){
                         foundMatchL = true;
                         objetiveAnt = objetive;
                         logMatchingEvent(objetive);
+
+                        ofstream &fileout = *ofStream;
+                        std::string::size_type sz;   // alias of size_t
+                        int i_dec = std::stoi (frame.substr(0,5),&sz) - limit;
+
+                        //cout << "frame target: " << i_dec << endl;
                     }
                     break;
                 }else{
                     foundMatchL = false;
+                }
+            }else{ //// CENTER ////
+                resultDistance = distance(stepPointL, GeoProy.calibPointsFloor[5]);
+                if (resultDistance < objetiveThresholdCenter){
+                    objetive = 5;
+                    //if ((objetive != objetiveAnt) && countCenterOut){
+                    if (centerFlagWasOut){
+                        foundMatchR = true;
+                        objetiveAnt = objetive;
+                        logMatchingEvent(objetive);
+
+                        centerFlagWasOut = false;
+
+                        ofstream &fileout = *ofStream;
+                        std::string::size_type sz;   // alias of size_t
+                        int i_dec = std::stoi (frame.substr(0,5),&sz) - limit;
+
+                        //cout << "frame center: " << i_dec << endl;
+                        //cout << "countCenter: " << countCenterOut << endl;
+
+                        countCenterOut = 0;
+                    }
+                    break;
+                }else{
+                    foundMatchR = false;
                 }
             }
 
@@ -770,29 +833,29 @@ void foot::askObjetives(geoproy GeoProy){
         foundMatchL = false;
     }
 
-    if(step_R) {
-        stepPointR = geoproy::transformFloor2Image(frameAct.rightFoot, GeoProy.homographyInv);
-        centerFlagIsIn = stepPointR.x > -60 && stepPointR.x < 60 && stepPointR.y > -60 && stepPointR.y < 60;
-    }
-    if(step_L){
-        stepPointL = geoproy::transformFloor2Image(frameAct.leftFoot, GeoProy.homographyInv);
-        centerFlagIsIn = stepPointL.x > -60 && stepPointL.x < 60 && stepPointL.y > -60 && stepPointL.y < 60;
-    }
-
-//    if(!step_R && !step_L){
-//
-//        stepPointR = geoproy::transformFloor2Image(centerKalman_R, GeoProy.homographyInv);
-//        stepPointL = geoproy::transformFloor2Image(centerKalman_L, GeoProy.homographyInv);
-//        centerFlagIsIn = stepPointR.x > -50 && stepPointR.x < 50 && stepPointR.y > -50 && stepPointR.y < 50 &&
-//                         stepPointL.x > -50 && stepPointL.x < 50 && stepPointL.y > -50 && stepPointL.y < 50;
+//    if(step_R) {
+//        stepPointR = geoproy::transformFloor2Image(frameAct.rightFoot, GeoProy.homographyInv);
+//        centerFlagIsInRight = stepPointR.x > -60 && stepPointR.x < 60 && stepPointR.y > -60 && stepPointR.y < 60;
+//        if (centerFlagIsInRight){
+//            countCenterOut = 0;
+//            centerFlagWasOut = false;
+//        }
+//    }
+//    if(step_L){
+//        stepPointL = geoproy::transformFloor2Image(frameAct.leftFoot, GeoProy.homographyInv);
+//        centerFlagIsInLeft = stepPointL.x > -60 && stepPointL.x < 60 && stepPointL.y > -60 && stepPointL.y < 60;
+//        if (centerFlagIsInLeft){
+//            countCenterOut = 0;
+//            centerFlagWasOut = false;
+//        }
 //    }
 
-    if (centerFlagIsIn && centerFlagWasOut){
-        centerFlagWasOut = false;
-        countCenterOut = 0;
-        objetiveAnt = 5;
-        logMatchingEvent(5);
-    }
+//    if ((centerFlagIsInRight || centerFlagIsInLeft) && centerFlagWasOut){
+//        centerFlagWasOut = false;
+//        countCenterOut = 0;
+//        objetiveAnt = 5;
+//        logMatchingEvent(5);
+//    }
 
 }
 
@@ -807,11 +870,11 @@ void foot::centerOutCountFlag(geoproy GeoProy){
     feetPosFloorL = GeoProy.transformFloor2Image(centerMeasured_L, GeoProy.homographyInv); // NOLINT
 
     //// logica inversa -> esta afuera = true
-    centerFlagR = ((feetPosFlootR.y < -60 || feetPosFlootR.y > 60) ||
-                    (feetPosFlootR.x < -60 || feetPosFlootR.x > 60));
+    centerFlagR = ((feetPosFlootR.y < -50 || feetPosFlootR.y > 50) ||  //// la wea estaba en 60
+                    (feetPosFlootR.x < -50 || feetPosFlootR.x > 50));
 
-    centerFlagL = ((feetPosFloorL.y < -60 || feetPosFloorL.y > 60) ||
-                    (feetPosFloorL.x < -60 || feetPosFloorL.x > 60));
+    centerFlagL = ((feetPosFloorL.y < -50 || feetPosFloorL.y > 50) ||
+                    (feetPosFloorL.x < -50 || feetPosFloorL.x > 50));
 
     if(centerFlagL && centerFlagR){
         countCenterOut++;

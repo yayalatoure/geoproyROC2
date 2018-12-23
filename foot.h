@@ -155,7 +155,9 @@ class foot {
         bool foundMatchR = false;
         bool foundMatchL = false;
         bool centerFlagWasOut = false;
-        bool centerFlagIsIn = true;
+
+        bool centerFlagIsInRight = true;
+        bool centerFlagIsInLeft = true;
         bool paint = false;
         bool paintTarget = false;
 

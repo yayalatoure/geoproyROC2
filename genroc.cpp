@@ -228,12 +228,12 @@ void genroc::algorithm(){
         }
 
         //// SHOW IMAGES ////
-//        if (Foot.frameAct.processFrame.data && Foot.start) {
-//            imshow("geoProy", geopro);
+        if (Foot.frameAct.processFrame.data && Foot.start) {
+            //imshow("geoProy", geopro);
 //            imshow("Segment", Foot.frameAct.segmentedFrame);
 //            //imshow("Result", Foot.frameAct.processFrame);
-//            ch = char(cv::waitKey(0));
-//        }
+            //ch = char(cv::waitKey(0));
+        }
 
 //        else if(Foot.frameAct.processFrame.data){
 //            imshow("Segment", Foot.frameAct.segmentedFrame);

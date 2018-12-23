@@ -47,7 +47,7 @@ class geoproy {
         void playsToObjetives();
         void paintMatchOrError(Mat &image, int objetive, cv::Scalar color);
 
-        void genCirclePoints(int objetive);
+        void genCirclePoints(int objetive, int radio);
         void paintCircles(QImage &image);
 
 
@@ -73,6 +73,7 @@ class geoproy {
 
         int circlenumPoints = 64;
         int radio = 35;
+        int radioCenter = 55;
 
         //// Points Vector Atributes ////
         std::map<int, cv::Point2f> calibPointsFloor;

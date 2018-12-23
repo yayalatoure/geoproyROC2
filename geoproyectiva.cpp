@@ -307,7 +307,7 @@ void geoproy::paintMatchOrError(Mat &image, int objetive, cv::Scalar color){
 
 
 
-void geoproy::genCirclePoints(int objetive){
+void geoproy::genCirclePoints(int objetive, int radio){
 
     cv::Mat &H = homography;
     cv::Point2f p;
@@ -330,7 +330,15 @@ void geoproy::paintCircles(QImage &image){
 
     for (int j = 1; j <= 9 ; ++j) {
         if(j != 5) {
-            genCirclePoints(j);
+            genCirclePoints(j, radio);
+            for (int i = 0; i < circlenumPoints; ++i) {
+                p1 = circlePointsImage[i];
+                p2 = circlePointsImage[(i + 1) % circlenumPoints];
+                pnt.setPen(QColor(255, 255, 0));
+                pnt.drawLine(QPoint(p1.x, p1.y), QPoint(p2.x, p2.y));
+            }
+        }else{
+            genCirclePoints(j, radioCenter);
             for (int i = 0; i < circlenumPoints; ++i) {
                 p1 = circlePointsImage[i];
                 p2 = circlePointsImage[(i + 1) % circlenumPoints];
